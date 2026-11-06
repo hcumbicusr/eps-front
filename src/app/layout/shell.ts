@@ -1,10 +1,12 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { DashboardApi } from '../core/dashboard.api';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'sidi-shell',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, RouterOutlet],
+  imports: [RouterLink, RouterLinkActive, RouterOutlet, FormsModule],
   template: `
     <div class="app-shell">
       <aside class="sidebar">
@@ -28,7 +30,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
       <div class="main-column">
         <header class="topbar">
           <div class="breadcrumb">▣ <strong>Plataforma SIDI</strong><span class="crumb-sep">/</span><span>Panel de seguimiento</span></div>
-          <div class="top-actions"><span class="mode-pill">● DEMO</span><span class="avatar" aria-hidden="true">S</span><span class="user-info">Usuario de demostración<br><small>Entorno educativo</small></span><a class="exit-link" routerLink="/login">Salir</a></div>
+          <div class="top-actions"><label class="sidi-source-select">Origen <select aria-label="Fuente del dashboard" [ngModel]="dashboardApi.source()" (ngModelChange)="dashboardApi.setSource($event)"><option value="flujo">Flujo RabbitMQ / IA</option><option value="demo">Semilla demo</option></select></label><span class="mode-pill">● DEMO</span><span class="avatar" aria-hidden="true">S</span><span class="user-info">Usuario de demostración<br><small>Entorno educativo</small></span><a class="exit-link" routerLink="/login">Salir</a></div>
         </header>
         <main id="main-content"><router-outlet /></main>
         <footer>SIDI © 2026 · Investigación aplicada con datos sintéticos · Prototipo no desplegado en una EPS</footer>
@@ -36,4 +38,4 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
     </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Shell {}
+export class Shell { readonly dashboardApi = inject(DashboardApi); }
